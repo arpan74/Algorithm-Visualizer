@@ -62,7 +62,11 @@ export default function dijkstra(grid, startNode, endNode) {
 
   while (r !== startNode[0] || c !== startNode[1]) {
     path.push(ordering[r][c]);
-    [r, c] = ordering[r][c];
+    if (ordering[r][c] !== null) {
+      [r, c] = ordering[r][c];
+    } else {
+      break;
+    }
   }
   path.reverse();
   return { visited: visited, path: path };

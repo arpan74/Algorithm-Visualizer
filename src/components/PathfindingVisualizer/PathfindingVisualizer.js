@@ -132,9 +132,13 @@ export default class PathfindingVisualizer extends Component {
     } else if (e.target.id === "AStar") {
       ordering = this.runAstar();
     }
-    this.paintNodes(ordering.visited).then(() => {
-      this.markPath(ordering.path);
-    });
+    this.paintNodes(ordering.visited)
+      .then(() => {
+        this.markPath(ordering.path);
+      })
+      .catch(() => {
+        this.setState({ disableButtons: false });
+      });
   }
 
   runDFS() {
@@ -160,7 +164,7 @@ export default class PathfindingVisualizer extends Component {
   }
 
   paintNodes(orderList) {
-    const { nodes, startNode, myRefs } = this.state;
+    const { nodes, startNode, myRefs, rows, cols } = this.state;
     if (nodes.length === 0) {
       return;
     }
@@ -169,10 +173,11 @@ export default class PathfindingVisualizer extends Component {
       for (const cor of orderList) {
         const currentNodeRef = myRefs[cor[0]][cor[1]].current;
         setTimeout(i => {
-          currentNodeRef.markCurrent();
           currentNodeRef.markVisited();
           if (currentNodeRef.props.isEnd) {
             return resolve();
+          } else if (cor === orderList[orderList.length - 1]) {
+            return reject();
           }
         }, 5 * i);
         i += 1;
