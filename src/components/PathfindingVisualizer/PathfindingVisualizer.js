@@ -30,7 +30,9 @@ export default class PathfindingVisualizer extends Component {
       endNode,
       nodes,
       myRefs,
-      disableButtons: false
+      disableButtons: false,
+      changeStart: false,
+      changeEnd: false
     };
 
     this.createGraph = this.createGraph.bind(this);
@@ -42,25 +44,33 @@ export default class PathfindingVisualizer extends Component {
     this.markPath = this.markPath.bind(this);
     this.runAlgo = this.runAlgo.bind(this);
     this.clearBoard = this.clearBoard.bind(this);
-    this.randomizeBoardWeights = this.randomizeBoardWeights.bind(this);
+    this.randomizeBoard = this.randomizeBoard.bind(this);
+    this.onMouseDown = this.onMouseDown.bind(this);
+    this.onMouseUp = this.onMouseUp.bind(this);
+    this.onMouseEnter = this.onMouseEnter.bind(this);
   }
 
   componentDidMount() {
     const { rows, cols, startNode, endNode } = this.state;
     let nodes = this.createGraph(rows, cols);
-    this.setState({ nodes: nodes });
+    this.setState({ nodes: nodes }, () => {
+      this.randomizeBoard();
+    });
   }
 
   clearBoard() {
-    const { rows, cols, myRefs } = this.state;
+    const { rows, cols, myRefs, nodes } = this.state;
     for (let r = 0; r < this.state.rows; r++) {
       for (let c = 0; c < this.state.cols; c++) {
-        myRefs[r][c].current.markClear();
+        if (!nodes[r][c].isStart && !nodes[r][c].isEnd && !nodes[r][c].isWall) {
+          console.log(r, c, nodes[r][c].isWall);
+          myRefs[r][c].current.markClear();
+        }
       }
     }
   }
 
-  randomizeBoardWeights() {
+  randomizeBoard() {
     this.clearBoard();
     const { nodes, rows, cols } = this.state;
     for (let r = 0; r < rows; r++) {
@@ -68,6 +78,12 @@ export default class PathfindingVisualizer extends Component {
       for (let c = 0; c < cols; c++) {
         let w = Math.floor(Math.random() * 10);
         nodes[r][c].weight = w;
+        let isWall = Math.floor(Math.random() * 10);
+        if (isWall < 2 && !nodes[r][c].isStart && !nodes[r][c].isEnd) {
+          nodes[r][c].isWall = true;
+        } else {
+          nodes[r][c].isWall = false;
+        }
       }
     }
     this.setState({ nodes: nodes });
@@ -86,7 +102,8 @@ export default class PathfindingVisualizer extends Component {
           weight: w,
           isStart: false,
           isEnd: false,
-          isVisited: false
+          isVisited: false,
+          isWall: false
         };
         if (row === startNode[0] && col === startNode[1]) {
           currentNode.isStart = true;
@@ -178,6 +195,47 @@ export default class PathfindingVisualizer extends Component {
     }
   }
 
+  onMouseDown(e) {
+    const { startNode, endNode } = this.state;
+    e.preventDefault();
+    let [r, c] = e.currentTarget.querySelector("div").id.split(".");
+    r = parseInt(r);
+    c = parseInt(c);
+    if (startNode[0] === r && startNode[1] === c) {
+      this.setState({ changeStart: true });
+    } else if (endNode[0] === r && endNode[1] === c) {
+      this.setState({ changeEnd: true });
+    }
+  }
+
+  onMouseUp(e) {
+    e.preventDefault();
+    const { nodes, startNode, endNode } = this.state;
+    nodes[startNode[0]][startNode[1]].isWall = false;
+    nodes[endNode[0]][endNode[1]].isWall = false;
+    this.setState({ changeStart: false, changeEnd: false, nodes: nodes });
+  }
+
+  onMouseEnter(e) {
+    let [r, c] = e.currentTarget.querySelector("div").id.split(".");
+    r = parseInt(r);
+    c = parseInt(c);
+    const { changeStart, changeEnd, nodes, startNode, endNode } = this.state;
+    if (!changeStart && !changeEnd) {
+      return;
+    }
+    if (changeStart) {
+      nodes[startNode[0]][startNode[1]].isStart = false;
+      nodes[r][c].isStart = true;
+      this.setState({ startNode: [r, c], nodes: nodes });
+    }
+    if (changeEnd) {
+      nodes[endNode[0]][endNode[1]].isEnd = false;
+      nodes[r][c].isEnd = true;
+      this.setState({ endNode: [r, c], nodes: nodes });
+    }
+  }
+
   render() {
     const { nodes, myRefs, disableButtons } = this.state;
     return (
@@ -216,9 +274,9 @@ export default class PathfindingVisualizer extends Component {
             Run A*
           </button>
           <button
-            onClick={this.randomizeBoardWeights}
+            onClick={this.randomizeBoard}
             disabled={disableButtons}
-            className="btn block m-4 w-full"
+            className="btn block m-4 w-full focus:outline-none"
           >
             New Weights
           </button>
@@ -229,14 +287,24 @@ export default class PathfindingVisualizer extends Component {
               <div key={rowIdx}>
                 {row.map((node, nodeIdx) => {
                   return (
-                    <Node
+                    <div
+                      className="inline-block"
                       key={nodeIdx}
-                      isStart={node.isStart}
-                      isEnd={node.isEnd}
-                      isVisited={node.isVisited}
-                      ref={myRefs[node.row][node.col]}
-                      weight={node.weight}
-                    />
+                      onMouseDown={this.onMouseDown}
+                      onMouseUp={this.onMouseUp}
+                      onMouseEnter={this.onMouseEnter}
+                    >
+                      <Node
+                        isStart={node.isStart}
+                        row={node.row}
+                        col={node.col}
+                        isEnd={node.isEnd}
+                        isVisited={node.isVisited}
+                        ref={myRefs[node.row][node.col]}
+                        weight={node.weight}
+                        isWall={node.isWall}
+                      />
+                    </div>
                   );
                 })}
               </div>

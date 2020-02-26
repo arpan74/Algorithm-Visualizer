@@ -3,24 +3,21 @@ import React, { Component } from "react";
 export default class Node extends Component {
   constructor(props) {
     super(props);
-    const { isStart, isEnd, isVisited, weight } = this.props;
+    const { isStart, isEnd, isVisited, weight, isWall, row, col } = this.props;
     this.myRef = React.createRef();
-    let bgColor = "#FFFFFF";
-    if (isStart) {
-      bgColor = "#8CC152";
-    }
-    if (isEnd) {
-      bgColor = "#FF0000";
-    }
+
     this.state = {
-      style: { backgroundColor: bgColor, border: "gray solid 1px" },
       weight,
       isStart,
-      isEnd
+      isEnd,
+      isWall,
+      row,
+      col
     };
     this.markVisited = this.markVisited.bind(this);
     this.markPath = this.markPath.bind(this);
     this.markCurrent = this.markCurrent.bind(this);
+    this.markClear = this.markClear.bind(this);
   }
 
   markCurrent() {
@@ -28,28 +25,38 @@ export default class Node extends Component {
   }
 
   markVisited() {
-    if (!this.state.isStart && !this.state.isEnd) {
-      this.myRef.current.style.backgroundColor = "#FF00FF";
-    }
+    this.myRef.current.style.backgroundColor = "#FF00FF";
   }
 
   markClear() {
-    if (!this.state.isStart && !this.state.isEnd) {
-      this.myRef.current.style.backgroundColor = "#FFFFFF";
-    }
+    this.myRef.current.style.backgroundColor = "#FFFFFF";
   }
 
   markPath() {
-    if (!this.state.isStart && !this.state.isEnd) {
+    if (!this.state.isStart && !this.state.isEnd && !this.state.isWall) {
       this.myRef.current.style.backgroundColor = "#FFFF00";
     }
   }
 
   render() {
-    const { style } = this.state;
-    const { weight } = this.props;
+    const { style, row, col } = this.state;
+    const id = row + "." + col;
+    let { weight, isWall, isStart, isEnd, onClick } = this.props;
+    let outerClass = "border border-solid ";
+    if (isWall) {
+      outerClass = outerClass.concat(" bg-black border-black");
+    } else {
+      outerClass = outerClass.concat(" border-blue-500");
+    }
+    if (isEnd) {
+      outerClass = outerClass.concat(" bg-red-500");
+    }
+    if (isStart) {
+      outerClass = outerClass.concat(" bg-green-400");
+    }
+
     return (
-      <div className="inline-block" style={style} ref={this.myRef}>
+      <div className={outerClass} ref={this.myRef} id={id}>
         <div className="inline-block w-6 h-6 text-center text-sm border-box">
           {weight}
         </div>

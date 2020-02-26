@@ -1,17 +1,8 @@
 import Queue from "./data structures/queue";
+import isValid from "./isValid";
 
 export default function bfs(grid, startNode, endNode) {
   function getNeighbors(i, j) {
-    function isValid(r, c) {
-      if (r < 0 || c < 0) {
-        return false;
-      }
-      if (r < grid.length && c < grid[r].length) {
-        return true;
-      }
-      return false;
-    }
-
     range = [
       [-1, 0],
       [1, 0],
@@ -22,7 +13,7 @@ export default function bfs(grid, startNode, endNode) {
     range.forEach((k, index) => {
       i += k[0];
       j += k[1];
-      if (isValid(i, j)) {
+      if (isValid(i, j, grid)) {
         neighbors.push([i, j]);
       }
       i -= k[0];

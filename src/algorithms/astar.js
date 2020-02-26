@@ -1,16 +1,7 @@
 import PriorityQueue from "./data structures/priorityqueue";
+import isValid from "./isValid";
 
 export default function astar(grid, startNode, endNode) {
-  function isValid(r, c) {
-    if (r < 0 || c < 0) {
-      return false;
-    }
-    if (r < grid.length && c < grid[r].length) {
-      return true;
-    }
-    return false;
-  }
-
   function calculateHeuristic(r, c) {
     let row = (endNode[0] - r) ** 2;
     let col = (endNode[1] - c) ** 2;
@@ -66,9 +57,10 @@ export default function astar(grid, startNode, endNode) {
     for (let n of neighbors) {
       let rr = r + n[0];
       let cc = c + n[1];
-      if (!isValid(rr, cc)) {
+      if (!isValid(rr, cc, grid)) {
         continue;
       }
+
       let dd = d + grid[rr][cc].weight;
       if (dd < dist[rr][cc]) {
         priority = dd + calculateHeuristic(rr, cc);
@@ -81,7 +73,6 @@ export default function astar(grid, startNode, endNode) {
 
   let r = endNode[0],
     c = endNode[1];
-
   while (r !== startNode[0] || c !== startNode[1]) {
     path.push(ordering[r][c]);
     [r, c] = ordering[r][c];

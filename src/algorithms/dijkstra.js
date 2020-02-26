@@ -1,15 +1,7 @@
 import PriorityQueue from "./data structures/priorityqueue";
+import isValid from "./isValid";
 
 export default function dijkstra(grid, startNode, endNode) {
-  function isValid(r, c) {
-    if (r < 0 || c < 0) {
-      return false;
-    }
-    if (r < grid.length && c < grid[r].length) {
-      return true;
-    }
-    return false;
-  }
   let dist = [],
     visited = [],
     ordering = [];
@@ -53,7 +45,7 @@ export default function dijkstra(grid, startNode, endNode) {
     for (let n of neighbors) {
       let rr = r + n[0];
       let cc = c + n[1];
-      if (!isValid(rr, cc)) {
+      if (!isValid(rr, cc, grid)) {
         continue;
       }
       let dd = d + grid[rr][cc].weight;
