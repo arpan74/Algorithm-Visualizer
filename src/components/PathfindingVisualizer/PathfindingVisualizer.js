@@ -52,6 +52,9 @@ export default class PathfindingVisualizer extends Component {
     this.onMouseUp = this.onMouseUp.bind(this);
     this.onMouseEnter = this.onMouseEnter.bind(this);
   }
+  componentWillMount() {
+    document.title = "Algorithm Visualizer";
+  }
 
   componentDidMount() {
     const { rows, cols, startNode, endNode } = this.state;
@@ -255,87 +258,92 @@ export default class PathfindingVisualizer extends Component {
   render() {
     const { nodes, myRefs, disableButtons } = this.state;
     return (
-      <div className="main lg:flex xl2:m-auto xl2:w-3/4">
-        <div className="buttons lg:flex-3">
-          <button
-            onClick={this.runAlgo}
-            disabled={disableButtons}
-            id="DFS"
-            className="btn block m-4 w-full"
-          >
-            Run DFS
-          </button>
-          <button
-            onClick={this.runAlgo}
-            disabled={disableButtons}
-            id="BFS"
-            className="btn block m-4 w-full"
-          >
-            Run BFS
-          </button>
-          <button
-            onClick={this.runAlgo}
-            disabled={disableButtons}
-            id="Dijkstra"
-            className="btn block m-4 w-full"
-          >
-            Run Dijkstra
-          </button>
-          <button
-            onClick={this.runAlgo}
-            disabled={disableButtons}
-            id="AStar"
-            className="btn block m-4 w-full"
-          >
-            Run A*
-          </button>
-          <button
-            onClick={this.runAlgo}
-            disabled={disableButtons}
-            id="GBF"
-            className="btn block m-4 w-full"
-          >
-            Run Greedy Best First
-          </button>
-          <button
-            onClick={this.randomizeBoard}
-            disabled={disableButtons}
-            className="btn block m-4 w-full focus:outline-none"
-          >
-            New Board
-          </button>
+      <>
+        <div className="main lg:flex xl2:m-auto xl2:w-3/4">
+          <div className="buttons lg:flex-3">
+            <button
+              onClick={this.runAlgo}
+              disabled={disableButtons}
+              id="DFS"
+              className="btn block m-4 w-full"
+            >
+              Run DFS
+            </button>
+            <button
+              onClick={this.runAlgo}
+              disabled={disableButtons}
+              id="BFS"
+              className="btn block m-4 w-full"
+            >
+              Run BFS
+            </button>
+            <button
+              onClick={this.runAlgo}
+              disabled={disableButtons}
+              id="Dijkstra"
+              className="btn block m-4 w-full"
+            >
+              Run Dijkstra
+            </button>
+            <button
+              onClick={this.runAlgo}
+              disabled={disableButtons}
+              id="AStar"
+              className="btn block m-4 w-full"
+            >
+              Run A*
+            </button>
+            <button
+              onClick={this.runAlgo}
+              disabled={disableButtons}
+              id="GBF"
+              className="btn block m-4 w-full"
+            >
+              Run Greedy Best First
+            </button>
+            <button
+              onClick={this.randomizeBoard}
+              disabled={disableButtons}
+              className="btn block m-4 w-full focus:outline-none"
+            >
+              New Board
+            </button>
+          </div>
+          <div className="grid w-full lg:flex-5  lg:justify-center">
+            {nodes.map((row, rowIdx) => {
+              return (
+                <div key={rowIdx}>
+                  {row.map((node, nodeIdx) => {
+                    return (
+                      <div
+                        className="inline-block"
+                        key={nodeIdx}
+                        onMouseDown={this.onMouseDown}
+                        onMouseUp={this.onMouseUp}
+                        onMouseEnter={this.onMouseEnter}
+                      >
+                        <Node
+                          isStart={node.isStart}
+                          row={node.row}
+                          col={node.col}
+                          isEnd={node.isEnd}
+                          isVisited={node.isVisited}
+                          ref={myRefs[node.row][node.col]}
+                          weight={node.weight}
+                          isWall={node.isWall}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })}
+          </div>
         </div>
-        <div className="grid w-full lg:flex-5  lg:justify-center">
-          {nodes.map((row, rowIdx) => {
-            return (
-              <div key={rowIdx}>
-                {row.map((node, nodeIdx) => {
-                  return (
-                    <div
-                      className="inline-block"
-                      key={nodeIdx}
-                      onMouseDown={this.onMouseDown}
-                      onMouseUp={this.onMouseUp}
-                      onMouseEnter={this.onMouseEnter}
-                    >
-                      <Node
-                        isStart={node.isStart}
-                        row={node.row}
-                        col={node.col}
-                        isEnd={node.isEnd}
-                        isVisited={node.isVisited}
-                        ref={myRefs[node.row][node.col]}
-                        weight={node.weight}
-                        isWall={node.isWall}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            );
-          })}
+        <div className="text-center lg:m-8 xl2:mt-16 text-xl">
+          Click and Drag the Start or End node to change it's position.
         </div>
-      </div>
+      </>
     );
   }
 }

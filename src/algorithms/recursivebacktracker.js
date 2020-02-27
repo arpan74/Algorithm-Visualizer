@@ -57,27 +57,16 @@ export default function recursiveBacktracker(grid, startNode, endNode) {
       let cc = c + n[1];
       if (isValid(rr, cc, grid) && !visited.has(rr + "." + cc)) {
         neighborsOfCur.push([n[0] / 2, n[1] / 2, rr, cc]);
-        //grid[r + n[0] / 2][c + n[1] / 2].isWall = false;
-        //stack.push([rr, cc]);
-        //break;
       }
     }
     shuffle(neighborsOfCur);
-    for (let n of neighborsOfCur) {
+    for (let j of neighborsOfCur) {
       let n = neighborsOfCur[Math.floor(Math.random() * neighborsOfCur.length)];
       if (n !== undefined) {
         grid[r + n[0]][c + n[1]].isWall = false;
         stack.push([n[2], n[3]]);
       }
     }
-
-    // if (neighborsOfCur.length > 0) {
-    //   let n = neighborsOfCur[Math.floor(Math.random() * neighborsOfCur.length)];
-    //   if (n !== undefined) {
-    //     grid[r + n[0]][c + n[1]].isWall = false;
-    //     stack.push([n[2], n[3]]);
-    //   }
-    // }
   }
   return grid;
 }
