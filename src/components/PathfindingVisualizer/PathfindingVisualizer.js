@@ -4,6 +4,8 @@ import bfs from "../../algorithms/bfs";
 import dfs from "../../algorithms/dfs";
 import dijkstra from "../../algorithms/dijkstra";
 import astar from "../../algorithms/astar";
+import greedybestfirst from "../../algorithms/greedybestfirst";
+import recursiveBacktracker from "../../algorithms/recursivebacktracker";
 
 export default class PathfindingVisualizer extends Component {
   constructor(props) {
@@ -11,7 +13,7 @@ export default class PathfindingVisualizer extends Component {
     let rows = 20,
       cols = 40,
       startNode = [0, 0],
-      endNode = [19, 4],
+      endNode = [18, 38],
       nodes = [];
 
     let myRefs = []; // Updating the UI through setState is too slow/laggy, so I've had to resort to refs
@@ -40,6 +42,7 @@ export default class PathfindingVisualizer extends Component {
     this.runDFS = this.runDFS.bind(this);
     this.runDijkstra = this.runDijkstra.bind(this);
     this.runAstar = this.runAstar.bind(this);
+    this.runGBF = this.runGBF.bind(this);
     this.paintNodes = this.paintNodes.bind(this);
     this.markPath = this.markPath.bind(this);
     this.runAlgo = this.runAlgo.bind(this);
@@ -72,18 +75,19 @@ export default class PathfindingVisualizer extends Component {
 
   randomizeBoard() {
     this.clearBoard();
-    const { nodes, rows, cols } = this.state;
+    let { nodes, rows, cols, startNode, endNode } = this.state;
+    nodes = recursiveBacktracker(nodes, startNode, endNode);
     for (let r = 0; r < rows; r++) {
       const currentRow = [];
       for (let c = 0; c < cols; c++) {
         let w = Math.floor(Math.random() * 10);
         nodes[r][c].weight = w;
         let isWall = Math.floor(Math.random() * 10);
-        if (isWall < 2 && !nodes[r][c].isStart && !nodes[r][c].isEnd) {
-          nodes[r][c].isWall = true;
-        } else {
-          nodes[r][c].isWall = false;
-        }
+        // if (isWall < 2 && !nodes[r][c].isStart && !nodes[r][c].isEnd) {
+        //   nodes[r][c].isWall = true;
+        // } else {
+        //   nodes[r][c].isWall = false;
+        // }
       }
     }
     this.setState({ nodes: nodes });
@@ -131,6 +135,8 @@ export default class PathfindingVisualizer extends Component {
       ordering = this.runDijkstra();
     } else if (e.target.id === "AStar") {
       ordering = this.runAstar();
+    } else if (e.target.id === "GBF") {
+      ordering = this.runGBF();
     }
     this.paintNodes(ordering.visited)
       .then(() => {
@@ -161,6 +167,11 @@ export default class PathfindingVisualizer extends Component {
   runAstar() {
     const { nodes, startNode, endNode } = this.state;
     return astar(nodes, startNode, endNode);
+  }
+
+  runGBF() {
+    const { nodes, startNode, endNode } = this.state;
+    return greedybestfirst(nodes, startNode, endNode);
   }
 
   paintNodes(orderList) {
@@ -244,7 +255,7 @@ export default class PathfindingVisualizer extends Component {
   render() {
     const { nodes, myRefs, disableButtons } = this.state;
     return (
-      <div className="main lg:flex">
+      <div className="main lg:flex xl2:m-auto xl2:w-3/4">
         <div className="buttons lg:flex-3">
           <button
             onClick={this.runAlgo}
@@ -279,11 +290,19 @@ export default class PathfindingVisualizer extends Component {
             Run A*
           </button>
           <button
+            onClick={this.runAlgo}
+            disabled={disableButtons}
+            id="GBF"
+            className="btn block m-4 w-full"
+          >
+            Run Greedy Best First
+          </button>
+          <button
             onClick={this.randomizeBoard}
             disabled={disableButtons}
             className="btn block m-4 w-full focus:outline-none"
           >
-            New Weights
+            New Board
           </button>
         </div>
         <div className="grid w-full lg:flex-5  lg:justify-center">

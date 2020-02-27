@@ -24,7 +24,7 @@ export default function astar(grid, startNode, endNode) {
   }
   let d = 0;
   let pqueue = new PriorityQueue();
-  let priority = calculateHeuristic(startNode[0], startNode[0]) + d;
+  let priority = calculateHeuristic(startNode[0], startNode[1]) + d;
   pqueue.enqueue([startNode[0], startNode[1], startNode, d], priority);
   let cur,
     neighbors = [

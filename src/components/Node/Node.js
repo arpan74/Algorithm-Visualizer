@@ -33,9 +33,7 @@ export default class Node extends Component {
   }
 
   markPath() {
-    if (!this.state.isStart && !this.state.isEnd && !this.state.isWall) {
-      this.myRef.current.style.backgroundColor = "#FFFF00";
-    }
+    this.myRef.current.style.backgroundColor = "#FFFF00";
   }
 
   render() {
