@@ -3,7 +3,7 @@
 
 Demo
 
-![Demo of Visualizer]('AlgoVisualizer.gif')
+![Demo of Visualizer]('./../AlgoVisualizer.gif')
 
 ## Algorithms Included
 * [A* Search](https://en.wikipedia.org/wiki/A*_search_algorithm)
@@ -18,5 +18,6 @@ Demo
 ### Greedy Best First Search
 ### Breadth First Search
 ### Depth First Search
-### Recursive Backtracker
+### Recursive Backtrackerk
+
 
