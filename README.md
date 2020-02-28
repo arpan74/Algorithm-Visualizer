@@ -18,6 +18,6 @@ Demo
 ### Greedy Best First Search
 ### Breadth First Search
 ### Depth First Search
-### Recursive Backtrackerk
+### Recursive Backtracker
 
 
