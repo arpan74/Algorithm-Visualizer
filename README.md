@@ -3,7 +3,7 @@
 
 Demo
 
-![Demo of Visualizer]('./../AlgoVisualizer.gif')
+![Demo of Visualizer](https://s5.gifyu.com/images/AlgoVisualizerdcd5f4f9b0ad07cf.md.gif)
 
 ## Algorithms Included
 * [A* Search](https://en.wikipedia.org/wiki/A*_search_algorithm)
