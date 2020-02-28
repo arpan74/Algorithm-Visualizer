@@ -1,9 +1,11 @@
 # Algorithm Visualizer
 > Visualize various Pathfinding Algorithms on a weighted Maze
 
-Demo
+Demo.
 
 ![Demo of Visualizer](https://s5.gifyu.com/images/AlgoVisualizerdcd5f4f9b0ad07cf.md.gif)
+
+Or just use it yourself [here](https://algorithm-visualizer-tool.netlify.com/).
 
 ## Algorithms Included
 * [A* Search](https://en.wikipedia.org/wiki/A*_search_algorithm)
@@ -13,11 +15,4 @@ Demo
 * [Depth First Search](https://en.wikipedia.org/wiki/Depth-first_search)
 * [Recursive Backtracker](https://en.wikipedia.org/wiki/Maze_generation_algorithm#Recursive_backtracker)
 
-### A* Search
-### Dijkstra
-### Greedy Best First Search
-### Breadth First Search
-### Depth First Search
-### Recursive Backtracker
-
-
+ 
