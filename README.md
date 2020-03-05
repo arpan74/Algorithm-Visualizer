@@ -3,7 +3,7 @@
 
 Demo.
 
-![Demo of Visualizer](https://s5.gifyu.com/images/AlgoVisualizerdcd5f4f9b0ad07cf.md.gif)
+![Demo of Visualizer](AlgoVisualizer.gif)
 
 Or just use it yourself [here](https://algorithm-visualizer-tool.netlify.com/).
 
